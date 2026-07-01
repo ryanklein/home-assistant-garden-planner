@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Tests for the season lifecycle: archive, clone and history retention."""
 
 from __future__ import annotations

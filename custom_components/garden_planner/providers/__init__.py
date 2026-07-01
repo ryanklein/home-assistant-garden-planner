@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Pluggable plant-data providers.
 
 A provider turns a free-text query or a source id into one or more normalized

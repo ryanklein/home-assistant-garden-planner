@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Date entities for manually overriding a planting's key dates."""
 
 from __future__ import annotations

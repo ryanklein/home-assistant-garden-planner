@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Pytest fixtures for Garden Planner tests."""
 
 from __future__ import annotations

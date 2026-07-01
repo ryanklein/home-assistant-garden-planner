@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Tests for model serialization round-trips."""
 
 from __future__ import annotations

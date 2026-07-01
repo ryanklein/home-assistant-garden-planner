@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Services for Garden Planner.
 
 * ``log_action`` -- record that you sowed/transplanted/watered/etc. a planting

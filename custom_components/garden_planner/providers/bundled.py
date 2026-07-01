@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Offline plant-data provider backed by the bundled ``data/plants.json``.
 
 This provider has no external dependencies, so the integration is fully usable

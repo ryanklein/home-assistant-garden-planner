@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Perenual (perenual.com) plant-data provider.
 
 Perenual has strong care data (sunlight, watering, cycle, hardiness) but does not

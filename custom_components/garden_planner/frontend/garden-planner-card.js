@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Garden Planner card — a combined season "Gantt" timeline for the whole
  * garden. Each planting is a bar on a shared calendar axis, coloured by phase

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Tests for the Lovelace card serving and the sensor attributes it reads."""
 
 from __future__ import annotations

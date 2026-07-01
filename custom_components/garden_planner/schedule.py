@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Frost-relative scheduling logic for the Garden Planner.
 
 Pure functions with no Home Assistant dependencies so the date math can be unit

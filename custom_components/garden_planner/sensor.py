@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Sensor entities for Garden Planner."""
 
 from __future__ import annotations

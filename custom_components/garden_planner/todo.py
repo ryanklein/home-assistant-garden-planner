@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """A to-do list of upcoming garden tasks.
 
 Checking an item off records the corresponding action against the planting (with

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """OpenFarm (openfarm.cc) plant-data provider.
 
 OpenFarm is a community crop database oriented toward growing information (sun

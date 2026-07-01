@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Data models for the Garden Planner integration.
 
 These dataclasses are deliberately free of any Home Assistant imports so the

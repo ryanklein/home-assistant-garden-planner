@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Tests for the frost-relative scheduling logic (pure logic)."""
 
 from __future__ import annotations

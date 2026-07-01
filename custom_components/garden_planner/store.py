@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Persistent storage for Garden Planner runtime state.
 
 Bed and planting *configuration* lives in config subentries (so it is editable

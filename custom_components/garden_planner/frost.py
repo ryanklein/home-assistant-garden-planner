@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Frost-date estimation for the Garden Planner.
 
 Home Assistant knows the installation's latitude, from which we can approximate

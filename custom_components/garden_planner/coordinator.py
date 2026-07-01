@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Coordinator that recomputes the garden schedule from stored state."""
 
 from __future__ import annotations

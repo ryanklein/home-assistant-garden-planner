@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """Tests for setup, config flow and the bundled provider (HA harness)."""
 
 from __future__ import annotations

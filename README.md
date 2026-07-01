@@ -97,4 +97,7 @@ functions with no Home Assistant dependency and are covered by unit tests.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Licensed under the **GNU Affero General Public License v3.0 only**
+(`AGPL-3.0-only`) — see [LICENSE](LICENSE). Modified versions, including ones
+operated over a network, must make their corresponding source available per
+section 13 of the AGPL.

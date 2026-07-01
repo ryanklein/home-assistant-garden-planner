@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-only
 """End-to-end test: subentries produce devices, entities and tasks."""
 
 from __future__ import annotations
