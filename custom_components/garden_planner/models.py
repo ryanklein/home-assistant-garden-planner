@@ -14,6 +14,7 @@ from enum import Enum
 from typing import Any
 
 from .const import (
+    ANCHOR_SPRING,
     METHOD_DIRECT,
     SUN_FULL,
     WATER_MEDIUM,
@@ -76,7 +77,13 @@ class PlantProfile:
     water: str = WATER_MEDIUM
     days_to_maturity: int | None = None
     method: str = METHOD_DIRECT
-    # Sow indoors/direct this many weeks *before* the last spring frost.
+    # Which frost date the sow offset is measured from: "spring" (before the
+    # last spring frost, the default) or "fall" (before the first fall frost,
+    # for overwintering crops such as garlic).
+    sow_anchor: str = ANCHOR_SPRING
+    # True for crops sown one year and harvested the next (overwintering).
+    overwinter: bool = False
+    # Sow indoors/direct this many weeks *before* the sow-anchor frost.
     sow_weeks_before_last_frost: float | None = None
     # Move seedlings out this many weeks *after* the last spring frost
     # (negative => before). Only meaningful for transplant crops.

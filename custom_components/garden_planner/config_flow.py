@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from typing import Any
 
 import voluptuous as vol
@@ -10,6 +10,7 @@ from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
     ConfigFlowResult,
+    ConfigSubentry,
     ConfigSubentryFlow,
     OptionsFlow,
     SubentryFlowResult,
@@ -33,9 +34,12 @@ from .const import (
     CONF_SEASON_YEAR,
     CONF_SIZE,
     CONF_SOIL,
+    CONF_SUCCESSION_INTERVAL,
+    CONF_SUCCESSIONS,
     CONF_SUN_EXPOSURE,
     CONF_UNITS,
     DEFAULT_PROVIDER,
+    DEFAULT_SUCCESSION_INTERVAL_DAYS,
     DEFAULT_UNITS,
     DOMAIN,
     METHOD_VALUES,
@@ -47,8 +51,14 @@ from .const import (
     UNITS_IMPERIAL,
     UNITS_METRIC,
 )
-from .models import PlantProfile
+from .frost import resolve_frost_dates
+from .models import Planting, PlantProfile
 from .providers import PlantProviderError, async_get_provider
+from .schedule import compute_sow_date
+
+
+def _parse_iso(value: str | None) -> date | None:
+    return date.fromisoformat(value) if value else None
 
 
 def _select(options: list[str], key: str) -> selector.SelectSelector:
@@ -256,6 +266,24 @@ class PlantingSubentryFlow(ConfigSubentryFlow):
                         mode=selector.NumberSelectorMode.BOX,
                     )
                 ),
+                vol.Required(
+                    CONF_SUCCESSIONS, default=1
+                ): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=1, max=12, mode=selector.NumberSelectorMode.BOX
+                    )
+                ),
+                vol.Required(
+                    CONF_SUCCESSION_INTERVAL,
+                    default=DEFAULT_SUCCESSION_INTERVAL_DAYS,
+                ): selector.NumberSelector(
+                    selector.NumberSelectorConfig(
+                        min=1,
+                        max=60,
+                        unit_of_measurement="days",
+                        mode=selector.NumberSelectorMode.BOX,
+                    )
+                ),
             }
         )
         return self.async_show_form(step_id="user", data_schema=schema)
@@ -313,14 +341,22 @@ class PlantingSubentryFlow(ConfigSubentryFlow):
         provider = await async_get_provider(self.hass, name, api_key)
         return provider, ""
 
-    async def _create(self, profile: PlantProfile) -> SubentryFlowResult:
-        entry = self._get_entry()
-        # Cache the chosen profile so the planting survives provider outages.
-        if (runtime := getattr(entry, "runtime_data", None)) is not None:
-            await runtime.store.async_cache_profile(profile)
-
+    def _base_sow_date(self, profile: PlantProfile, season_year: int):
+        """Compute the frost-relative sow date to stagger successions from."""
+        options = self._get_entry().options
+        frost = resolve_frost_dates(
+            self.hass.config.latitude,
+            season_year,
+            _parse_iso(options.get(CONF_LAST_FROST)),
+            _parse_iso(options.get(CONF_FIRST_FROST)),
+        )
         method = self._pending.get(CONF_METHOD) or profile.method
-        data = {
+        probe = Planting(id="probe", bed_id="", profile=profile, method=method)
+        return compute_sow_date(profile, probe, frost)
+
+    def _base_data(self, profile: PlantProfile) -> dict[str, Any]:
+        method = self._pending.get(CONF_METHOD) or profile.method
+        return {
             CONF_BED_ID: self._pending[CONF_BED_ID],
             "profile": profile.to_dict(),
             "method": method,
@@ -328,6 +364,63 @@ class PlantingSubentryFlow(ConfigSubentryFlow):
             "season_year": int(self._pending[CONF_SEASON_YEAR]),
             "manual_overrides": {},
         }
-        bed_name = self._beds().get(self._pending[CONF_BED_ID], "")
-        title = f"{profile.common_name} — {bed_name}" if bed_name else profile.common_name
-        return self.async_create_entry(title=title, data=data)
+
+    def _existing_same_crop(self, profile: PlantProfile, bed_id: str) -> int:
+        """Count existing plantings of the same crop in the same bed."""
+        count = 0
+        for sub in self._get_entry().subentries.values():
+            if sub.subentry_type != SUBENTRY_TYPE_PLANTING:
+                continue
+            data = sub.data
+            if (
+                data.get(CONF_BED_ID) == bed_id
+                and data.get("profile", {}).get("source_id") == profile.source_id
+            ):
+                count += 1
+        return count
+
+    async def _create(self, profile: PlantProfile) -> SubentryFlowResult:
+        entry = self._get_entry()
+        # Cache the chosen profile so the planting survives provider outages.
+        if (runtime := getattr(entry, "runtime_data", None)) is not None:
+            await runtime.store.async_cache_profile(profile)
+
+        bed_id = self._pending[CONF_BED_ID]
+        bed_name = self._beds().get(bed_id, "")
+        successions = int(self._pending.get(CONF_SUCCESSIONS, 1))
+        interval = int(
+            self._pending.get(
+                CONF_SUCCESSION_INTERVAL, DEFAULT_SUCCESSION_INTERVAL_DAYS
+            )
+        )
+        base = f"{profile.common_name} — {bed_name}" if bed_name else profile.common_name
+
+        if successions > 1:
+            base_sow = self._base_sow_date(profile, int(self._pending[CONF_SEASON_YEAR]))
+            # Create successions 2..N up front, pinning each sow date so the
+            # whole run stays staggered regardless of later frost recomputes.
+            for i in range(1, successions):
+                data = self._base_data(profile)
+                data["manual_overrides"] = {
+                    "sow": (base_sow + timedelta(days=i * interval)).isoformat()
+                }
+                self.hass.config_entries.async_add_subentry(
+                    entry,
+                    ConfigSubentry(
+                        data=data,
+                        subentry_type=SUBENTRY_TYPE_PLANTING,
+                        title=f"{base} #{i + 1}",
+                        unique_id=None,
+                    ),
+                )
+            first = self._base_data(profile)
+            first["manual_overrides"] = {"sow": base_sow.isoformat()}
+            return self.async_create_entry(title=f"{base} #1", data=first)
+
+        # Single planting: disambiguate the title if the same crop already
+        # grows in this bed by appending its sow date.
+        title = base
+        if self._existing_same_crop(profile, bed_id):
+            sow = self._base_sow_date(profile, int(self._pending[CONF_SEASON_YEAR]))
+            title = f"{base} ({sow.isoformat()})"
+        return self.async_create_entry(title=title, data=self._base_data(profile))

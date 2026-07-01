@@ -244,6 +244,38 @@
     "frost_tolerant": true,
     "notes": "Bolts quickly in heat; succession sow for a steady supply."
   },
+  "garlic": {
+    "common_name": "Garlic",
+    "scientific_name": "Allium sativum",
+    "sun": "full",
+    "water": "low",
+    "days_to_maturity": 245,
+    "method": "direct",
+    "sow_anchor": "fall",
+    "overwinter": true,
+    "sow_weeks_before_last_frost": 3,
+    "harvest_window_days": 14,
+    "spacing_cm": 15,
+    "depth_cm": 5.0,
+    "frost_tolerant": true,
+    "notes": "Plant cloves a few weeks before the first fall frost; harvest the following summer when lower leaves brown."
+  },
+  "shallot": {
+    "common_name": "Shallot",
+    "scientific_name": "Allium cepa var. aggregatum",
+    "sun": "full",
+    "water": "low",
+    "days_to_maturity": 240,
+    "method": "direct",
+    "sow_anchor": "fall",
+    "overwinter": true,
+    "sow_weeks_before_last_frost": 3,
+    "harvest_window_days": 14,
+    "spacing_cm": 15,
+    "depth_cm": 3.0,
+    "frost_tolerant": true,
+    "notes": "Fall-planted sets overwinter and bulb up the following summer."
+  },
   "marigold": {
     "common_name": "Marigold",
     "scientific_name": "Tagetes",

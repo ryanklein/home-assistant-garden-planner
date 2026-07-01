@@ -14,6 +14,14 @@ harvest* — with dates computed automatically from your local frost dates.
 - **Frost-relative scheduling**: sow / transplant / harvest dates are derived from
   a plant's profile and your last/first frost dates. Frost dates are estimated
   from your HA location and can be overridden.
+- **Overwintering crops** (e.g. garlic, shallots) are sown relative to the *first
+  fall frost* and harvested the next summer; their season reads as `2026–2027`.
+- **Succession planting**: create several staggered plantings of a crop in one
+  step (e.g. beets every 2 weeks ×3), each with a distinct, dated name.
+- **Season lifecycle**: `archive_planting` saves a finished planting's summary +
+  history and removes it; `clone_to_next_season` duplicates it into next year.
+  History is never silently lost — deleting a planting from the UI archives its
+  log automatically.
 - **Pluggable plant data** with a bundled offline database (works with no API key
   or network), plus optional Perenual and OpenFarm providers. Every fetched plant
   is cached locally so plantings keep working if a provider goes down.
@@ -22,8 +30,9 @@ harvest* — with dates computed automatically from your local frost dates.
   and manual date-override controls.
 - **Native Calendar and To-do** entities for all upcoming garden tasks; checking a
   to-do item logs the action and advances the schedule.
-- **Services and events** (`log_action`, `set_frost_dates`, `refresh_plant_data`;
-  `garden_planner_task_due`, `garden_planner_stage_change`) for automations.
+- **Services and events** (`log_action`, `set_frost_dates`, `refresh_plant_data`,
+  `archive_planting`, `clone_to_next_season`; `garden_planner_task_due`,
+  `garden_planner_stage_change`) for automations.
 
 ## Installation (HACS)
 

@@ -45,3 +45,17 @@ set_frost_dates:
 refresh_plant_data:
   name: Refresh plant data
   description: Re-fetch plant profiles for all plantings from the configured provider.
+
+archive_planting:
+  name: Archive planting
+  description: Save a finished planting's season summary and history to the archive, then remove it.
+  target:
+    device:
+      integration: garden_planner
+
+clone_to_next_season:
+  name: Clone to next season
+  description: Duplicate a planting into the following year with a fresh, empty history.
+  target:
+    device:
+      integration: garden_planner

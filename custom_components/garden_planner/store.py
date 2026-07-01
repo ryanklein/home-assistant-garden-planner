@@ -31,7 +31,7 @@ class GardenStore:
 
     def __init__(self, hass: HomeAssistant) -> None:
         self._store: Store[dict] = Store(hass, STORAGE_VERSION, STORAGE_KEY)
-        self._data: dict = {"action_logs": {}, "profile_cache": {}}
+        self._data: dict = {"action_logs": {}, "profile_cache": {}, "archive": []}
 
     async def async_load(self) -> None:
         data = await self._store.async_load()
@@ -39,6 +39,7 @@ class GardenStore:
             self._data = {
                 "action_logs": data.get("action_logs", {}),
                 "profile_cache": data.get("profile_cache", {}),
+                "archive": data.get("archive", []),
             }
 
     async def _async_save(self) -> None:
@@ -63,6 +64,36 @@ class GardenStore:
         """Drop stored state for a planting that has been removed."""
         if self._data["action_logs"].pop(planting_id, None) is not None:
             await self._async_save()
+
+    # --- Archive / history --------------------------------------------------
+
+    def get_archive(self) -> list[dict]:
+        return list(self._data["archive"])
+
+    async def async_archive(self, record: dict) -> None:
+        """Append a season-history record and drop the live action log."""
+        self._data["archive"].append(record)
+        self._data["action_logs"].pop(record.get("planting_id"), None)
+        await self._async_save()
+
+    async def async_reconcile(self, valid_ids: set[str]) -> None:
+        """Archive action logs whose planting no longer exists.
+
+        Safety net so history is not silently lost when a planting is deleted
+        directly from the Home Assistant UI (which we cannot intercept).
+        """
+        orphans = [pid for pid in self._data["action_logs"] if pid not in valid_ids]
+        if not orphans:
+            return
+        for planting_id in orphans:
+            self._data["archive"].append(
+                {
+                    "planting_id": planting_id,
+                    "reason": "orphaned",
+                    "action_log": self._data["action_logs"].pop(planting_id),
+                }
+            )
+        await self._async_save()
 
     # --- Profile cache ------------------------------------------------------
 

@@ -16,6 +16,7 @@ from .const import (
     ACTION_SOW,
     ACTION_TRANSPLANT,
     ACTION_WATER,
+    ANCHOR_FALL,
     METHOD_TRANSPLANT,
     WATER_CADENCE_DAYS,
     WATER_MEDIUM,
@@ -49,6 +50,16 @@ class ScheduleResult:
     next_task: GardenTask | None
     tasks: list[GardenTask]
 
+    @property
+    def season_label(self) -> str | None:
+        """A human season label, spanning two years for overwintering crops."""
+        if self.sow_date is None:
+            return None
+        end = self.first_harvest_date or self.sow_date
+        if end.year != self.sow_date.year:
+            return f"{self.sow_date.year}–{end.year}"
+        return str(self.sow_date.year)
+
 
 def _weeks(value: float | None) -> timedelta | None:
     return timedelta(weeks=value) if value is not None else None
@@ -62,11 +73,16 @@ def compute_sow_date(
         return override
     if (logged := planting.last_action(ACTION_SOW)) is not None:
         return logged
+    # Fall-anchored (overwintering) crops are sown relative to the first fall
+    # frost; everything else relative to the last spring frost.
+    anchor = (
+        frost.first_frost if profile.sow_anchor == ANCHOR_FALL else frost.last_frost
+    )
     offset = _weeks(profile.sow_weeks_before_last_frost)
     if offset is not None:
-        return frost.last_frost - offset
-    # Frost-tolerant crops with no explicit offset can go in around last frost.
-    return frost.last_frost
+        return anchor - offset
+    # Frost-tolerant crops with no explicit offset can go in around the anchor.
+    return anchor
 
 
 def compute_transplant_date(
@@ -159,6 +175,10 @@ def compute_next_water_date(
     if sow_date is None or today < sow_date:
         return None
     if harvest_end is not None and today > harvest_end:
+        return None
+    # Overwintering crops sit dormant through the cold months; skip automatic
+    # watering tasks and let the gardener water manually if needed.
+    if profile.overwinter:
         return None
     cadence = WATER_CADENCE_DAYS.get(profile.water, WATER_CADENCE_DAYS[WATER_MEDIUM])
     last_water = planting.last_action(ACTION_WATER)

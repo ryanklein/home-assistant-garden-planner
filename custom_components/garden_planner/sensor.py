@@ -43,6 +43,11 @@ PLANTING_SENSORS: tuple[PlantingSensorDescription, ...] = (
         value_fn=lambda s, today: s.stage.value,
     ),
     PlantingSensorDescription(
+        key="season",
+        translation_key="season",
+        value_fn=lambda s, today: s.season_label,
+    ),
+    PlantingSensorDescription(
         key="next_task",
         translation_key="next_task",
         value_fn=lambda s, today: s.next_task.kind if s.next_task else None,
@@ -85,13 +90,16 @@ async def async_setup_entry(
     coordinator = entry.runtime_data.coordinator
     entities: list[SensorEntity] = []
 
+    # Add bed entities first so their devices exist before plantings reference
+    # them as a `via_device` parent.
+    for bed_id in coordinator.data.beds:
+        entities.append(BedPlantingCountSensor(coordinator, bed_id))
+
     for planting_id in coordinator.data.plantings:
         entities.extend(
             PlantingSensor(coordinator, planting_id, description)
             for description in PLANTING_SENSORS
         )
-    for bed_id in coordinator.data.beds:
-        entities.append(BedPlantingCountSensor(coordinator, bed_id))
 
     entities.append(FrostSensor(coordinator, entry.entry_id, "last"))
     entities.append(FrostSensor(coordinator, entry.entry_id, "first"))

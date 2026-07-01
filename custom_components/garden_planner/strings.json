@@ -71,7 +71,9 @@
             "plant_query": "Search for a plant",
             "method": "Sowing method (optional override)",
             "quantity": "Quantity",
-            "season_year": "Season year"
+            "season_year": "Season year",
+            "successions": "Number of successive plantings",
+            "succession_interval_days": "Days between successions"
           }
         },
         "pick": {
@@ -104,6 +106,7 @@
           "done": "Done"
         }
       },
+      "season": { "name": "Season" },
       "next_task": { "name": "Next task" },
       "next_task_date": { "name": "Next task date" },
       "days_to_next_task": { "name": "Days to next task" },
@@ -203,6 +206,14 @@
     "refresh_plant_data": {
       "name": "Refresh plant data",
       "description": "Re-fetch plant profiles for all plantings from the configured provider."
+    },
+    "archive_planting": {
+      "name": "Archive planting",
+      "description": "Save a finished planting's season summary and history to the archive, then remove it."
+    },
+    "clone_to_next_season": {
+      "name": "Clone to next season",
+      "description": "Duplicate a planting into the following year with a fresh, empty history."
     }
   }
 }

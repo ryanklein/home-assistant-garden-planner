@@ -45,6 +45,10 @@ CONF_SEASON_YEAR = "season_year"
 CONF_SOW_DATE = "sow_date"
 CONF_TRANSPLANT_DATE = "transplant_date"
 CONF_HARVEST_DATE = "harvest_date"
+CONF_SUCCESSIONS = "successions"
+CONF_SUCCESSION_INTERVAL = "succession_interval_days"
+
+DEFAULT_SUCCESSION_INTERVAL_DAYS = 14
 
 # Providers
 PROVIDER_BUNDLED = "bundled"
@@ -76,6 +80,13 @@ METHOD_TRANSPLANT = "transplant"
 METHOD_BOTH = "both"
 METHOD_VALUES = [METHOD_DIRECT, METHOD_TRANSPLANT, METHOD_BOTH]
 
+# Sow anchor: which frost date the sow offset is measured from.
+# "spring" -> before the last spring frost (default, warm-season crops)
+# "fall"   -> before the first fall frost (overwintering crops, e.g. garlic)
+ANCHOR_SPRING = "spring"
+ANCHOR_FALL = "fall"
+ANCHOR_VALUES = [ANCHOR_SPRING, ANCHOR_FALL]
+
 # Action / task kinds
 ACTION_SOW = "sow"
 ACTION_TRANSPLANT = "transplant"
@@ -101,6 +112,8 @@ WATER_CADENCE_DAYS = {
 SERVICE_LOG_ACTION = "log_action"
 SERVICE_SET_FROST_DATES = "set_frost_dates"
 SERVICE_REFRESH_PLANT_DATA = "refresh_plant_data"
+SERVICE_ARCHIVE_PLANTING = "archive_planting"
+SERVICE_CLONE_TO_NEXT_SEASON = "clone_to_next_season"
 
 # Events
 EVENT_TASK_DUE = f"{DOMAIN}_task_due"

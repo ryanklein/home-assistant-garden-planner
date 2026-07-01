@@ -111,6 +111,9 @@ class GardenCoordinator(DataUpdateCoordinator[GardenData]):
 
         # Ensure the current year's frost dates are always available for sensors.
         data.frost.setdefault(today.year, self._frost_for(today.year))
+
+        # Safety net: preserve history for plantings deleted from the UI.
+        await self.store.async_reconcile(set(data.plantings))
         return data
 
     def _emit_events(

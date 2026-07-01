@@ -97,6 +97,44 @@ def test_next_task_is_soonest_future():
     assert result.next_task.kind == "sow"
 
 
+def _overwinter_garlic() -> PlantProfile:
+    return PlantProfile(
+        common_name="Garlic",
+        source="bundled",
+        source_id="garlic",
+        method="direct",
+        sow_anchor="fall",
+        overwinter=True,
+        days_to_maturity=245,
+        sow_weeks_before_last_frost=3,
+        water="low",
+    )
+
+
+def test_overwinter_crop_sows_in_fall_and_harvests_next_year():
+    planting = Planting(id="g1", bed_id="b1", profile=_overwinter_garlic(), method="direct")
+    result = compute_schedule(planting, FROST, today=date(2026, 6, 1))
+
+    # Sown relative to the first FALL frost, not the spring frost.
+    assert result.sow_date == FROST.first_frost - timedelta(weeks=3)
+    # Harvest lands the following year.
+    assert result.first_harvest_date.year == FROST.first_frost.year + 1
+    assert result.season_label == "2026–2027"
+
+
+def test_overwinter_crop_has_no_water_tasks():
+    planting = Planting(id="g2", bed_id="b1", profile=_overwinter_garlic(), method="direct")
+    # A date after sowing when a normal crop would have watering due.
+    result = compute_schedule(planting, FROST, today=date(2026, 10, 1))
+    assert all(t.kind != "water" for t in result.tasks)
+
+
+def test_spring_crop_season_label_is_single_year():
+    planting = Planting(id="r1", bed_id="b1", profile=_direct_radish(), method="direct")
+    result = compute_schedule(planting, FROST, today=date(2026, 1, 1))
+    assert result.season_label == "2026"
+
+
 def test_logged_action_removes_sow_task_and_advances():
     profile = _direct_radish()
     sow = FROST.last_frost - timedelta(weeks=4)
