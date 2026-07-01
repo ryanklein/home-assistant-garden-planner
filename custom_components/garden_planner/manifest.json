@@ -1,0 +1,12 @@
+{
+  "domain": "garden_planner",
+  "name": "Garden Planner",
+  "codeowners": ["@ryan"],
+  "config_flow": true,
+  "documentation": "https://github.com/ryanklein/home-assistant-garden-planner",
+  "integration_type": "hub",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/ryanklein/home-assistant-garden-planner/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

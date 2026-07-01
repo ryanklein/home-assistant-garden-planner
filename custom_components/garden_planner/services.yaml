@@ -1,0 +1,47 @@
+log_action:
+  name: Log action
+  description: Record that you performed an action on a planting (sets today's date unless one is given).
+  target:
+    device:
+      integration: garden_planner
+  fields:
+    kind:
+      name: Action
+      description: What you did.
+      required: true
+      selector:
+        select:
+          translation_key: action_kind
+          options:
+            - sow
+            - transplant
+            - water
+            - fertilize
+            - harvest
+    date:
+      name: Date
+      description: When it happened. Defaults to today.
+      required: false
+      selector:
+        date:
+
+set_frost_dates:
+  name: Set frost dates
+  description: Override the estimated last-spring and/or first-fall frost dates.
+  fields:
+    last_frost:
+      name: Last spring frost
+      description: Average date of the last spring frost.
+      required: false
+      selector:
+        date:
+    first_frost:
+      name: First fall frost
+      description: Average date of the first fall frost.
+      required: false
+      selector:
+        date:
+
+refresh_plant_data:
+  name: Refresh plant data
+  description: Re-fetch plant profiles for all plantings from the configured provider.

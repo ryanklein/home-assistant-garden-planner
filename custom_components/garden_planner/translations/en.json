@@ -1,0 +1,208 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Garden Planner",
+        "description": "Create your garden. Afterwards, add garden beds and plantings, and adjust the plant-data provider and frost dates from the integration's options."
+      }
+    },
+    "abort": {
+      "already_configured": "Garden Planner is already set up."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Garden settings",
+        "description": "Frost dates are estimated from your Home Assistant location. Leave the override fields empty to keep using the estimate.",
+        "data": {
+          "provider": "Plant data provider",
+          "api_key": "API key (Perenual only)",
+          "units": "Units",
+          "last_frost": "Last spring frost (override)",
+          "first_frost": "First fall frost (override)"
+        }
+      }
+    }
+  },
+  "config_subentries": {
+    "bed": {
+      "initiate_flow": {
+        "user": "Add garden bed",
+        "reconfigure": "Reconfigure garden bed"
+      },
+      "entry_type": "Garden bed",
+      "step": {
+        "user": {
+          "title": "Add garden bed",
+          "data": {
+            "name": "Name",
+            "sun_exposure": "Sun exposure",
+            "size": "Size",
+            "orientation": "Orientation",
+            "soil": "Soil",
+            "notes": "Notes"
+          }
+        },
+        "reconfigure": {
+          "title": "Reconfigure garden bed",
+          "data": {
+            "name": "Name",
+            "sun_exposure": "Sun exposure",
+            "size": "Size",
+            "orientation": "Orientation",
+            "soil": "Soil",
+            "notes": "Notes"
+          }
+        }
+      }
+    },
+    "planting": {
+      "initiate_flow": {
+        "user": "Add planting"
+      },
+      "entry_type": "Planting",
+      "step": {
+        "user": {
+          "title": "Add planting",
+          "description": "Choose a bed and search for a plant.",
+          "data": {
+            "bed_id": "Garden bed",
+            "plant_query": "Search for a plant",
+            "method": "Sowing method (optional override)",
+            "quantity": "Quantity",
+            "season_year": "Season year"
+          }
+        },
+        "pick": {
+          "title": "Choose a plant",
+          "description": "{note}",
+          "data": {
+            "plant_source_id": "Plant"
+          }
+        }
+      },
+      "abort": {
+        "no_beds": "Add at least one garden bed before adding a planting.",
+        "no_matches": "No plants matched your search. Try a different term or provider."
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "stage": {
+        "name": "Stage",
+        "state": {
+          "planned": "Planned",
+          "sown": "Sown",
+          "germinating": "Germinating",
+          "seedling": "Seedling",
+          "transplanted": "Transplanted",
+          "growing": "Growing",
+          "flowering": "Flowering",
+          "harvesting": "Harvesting",
+          "done": "Done"
+        }
+      },
+      "next_task": { "name": "Next task" },
+      "next_task_date": { "name": "Next task date" },
+      "days_to_next_task": { "name": "Days to next task" },
+      "harvest_date": { "name": "Harvest date" },
+      "days_to_harvest": { "name": "Days to harvest" },
+      "active_plantings": { "name": "Active plantings" },
+      "last_frost": { "name": "Last spring frost" },
+      "first_frost": { "name": "First fall frost" }
+    },
+    "binary_sensor": {
+      "action_needed": { "name": "Action needed" }
+    },
+    "button": {
+      "log_water": { "name": "Log watering" },
+      "log_transplant": { "name": "Log transplant" },
+      "log_harvest": { "name": "Log harvest" }
+    },
+    "date": {
+      "override_sow": { "name": "Sow date (override)" },
+      "override_transplant": { "name": "Transplant date (override)" },
+      "override_harvest": { "name": "Harvest date (override)" }
+    },
+    "calendar": {
+      "garden": { "name": "Garden calendar" }
+    },
+    "todo": {
+      "tasks": { "name": "Garden tasks" }
+    }
+  },
+  "selector": {
+    "provider": {
+      "options": {
+        "bundled": "Bundled (offline)",
+        "perenual": "Perenual",
+        "openfarm": "OpenFarm"
+      }
+    },
+    "units": {
+      "options": {
+        "metric": "Metric",
+        "imperial": "Imperial"
+      }
+    },
+    "sun_exposure": {
+      "options": {
+        "full": "Full sun",
+        "partial": "Partial sun",
+        "shade": "Shade"
+      }
+    },
+    "method": {
+      "options": {
+        "direct": "Direct sow",
+        "transplant": "Transplant",
+        "both": "Either"
+      }
+    },
+    "action_kind": {
+      "options": {
+        "sow": "Sow",
+        "transplant": "Transplant",
+        "water": "Water",
+        "fertilize": "Fertilize",
+        "harvest": "Harvest"
+      }
+    }
+  },
+  "services": {
+    "log_action": {
+      "name": "Log action",
+      "description": "Record that you performed an action on a planting.",
+      "fields": {
+        "kind": {
+          "name": "Action",
+          "description": "What you did."
+        },
+        "date": {
+          "name": "Date",
+          "description": "When it happened. Defaults to today."
+        }
+      }
+    },
+    "set_frost_dates": {
+      "name": "Set frost dates",
+      "description": "Override the estimated frost dates.",
+      "fields": {
+        "last_frost": {
+          "name": "Last spring frost",
+          "description": "Average date of the last spring frost."
+        },
+        "first_frost": {
+          "name": "First fall frost",
+          "description": "Average date of the first fall frost."
+        }
+      }
+    },
+    "refresh_plant_data": {
+      "name": "Refresh plant data",
+      "description": "Re-fetch plant profiles for all plantings from the configured provider."
+    }
+  }
+}
