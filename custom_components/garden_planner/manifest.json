@@ -3,6 +3,7 @@
   "name": "Garden Planner",
   "codeowners": ["@ryan"],
   "config_flow": true,
+  "dependencies": ["http"],
   "documentation": "https://github.com/ryanklein/home-assistant-garden-planner",
   "integration_type": "hub",
   "iot_class": "calculated",

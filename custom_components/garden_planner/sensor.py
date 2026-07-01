@@ -34,6 +34,10 @@ def _days_until(target: date | None, today: date) -> int | None:
     return (target - today).days if target is not None else None
 
 
+def _iso(value: date | None) -> str | None:
+    return value.isoformat() if value is not None else None
+
+
 PLANTING_SENSORS: tuple[PlantingSensorDescription, ...] = (
     PlantingSensorDescription(
         key="stage",
@@ -128,6 +132,34 @@ class PlantingSensor(GardenPlantingEntity, SensorEntity):
         if schedule is None:
             return None
         return self.entity_description.value_fn(schedule, dt_util.now().date())
+
+    @property
+    def extra_state_attributes(self) -> dict[str, object] | None:
+        # The 'stage' sensor carries the full schedule so the Lovelace card can
+        # read one entity per planting instead of stitching several together.
+        if self.entity_description.key != "stage":
+            return None
+        planting = self.planting
+        schedule = self.schedule
+        if planting is None or schedule is None:
+            return None
+        bed = self.coordinator.data.beds.get(planting.bed_id)
+        return {
+            "gp_role": "planting",
+            "planting_id": planting.id,
+            "plant": planting.profile.common_name,
+            "bed": bed.name if bed else None,
+            "bed_id": planting.bed_id,
+            "season": schedule.season_label,
+            "sow_date": _iso(schedule.sow_date),
+            "transplant_date": _iso(schedule.transplant_date),
+            "first_harvest_date": _iso(schedule.first_harvest_date),
+            "harvest_end_date": _iso(schedule.harvest_end_date),
+            "next_task": schedule.next_task.kind if schedule.next_task else None,
+            "next_task_date": _iso(
+                schedule.next_task.due_date if schedule.next_task else None
+            ),
+        }
 
 
 class BedPlantingCountSensor(GardenBedEntity, SensorEntity):

@@ -5,7 +5,7 @@ into a garden planner. Model your **garden beds** and **plantings**, and let the
 integration tell you *when to sow, when to transplant, when to water, and when to
 harvest* — with dates computed automatically from your local frost dates.
 
-> Status: early MVP. Entities + services, no custom dashboard card yet.
+> Status: MVP. Entities, services, and a bundled dashboard card.
 
 ## Features
 
@@ -48,6 +48,25 @@ harvest* — with dates computed automatically from your local frost dates.
   Perenual API key if used, pick units, and optionally override the frost dates.
 - **Frost dates** default to an estimate based on your Home Assistant latitude.
   Set your known local dates for best accuracy.
+
+## Garden timeline card
+
+The integration ships a Lovelace card that draws a **season "Gantt" timeline** —
+every planting as a bar on a shared calendar axis, grouped by bed, coloured by
+phase (sow → growing → harvest), with a "today" marker. Succession runs and
+overwintering spans (e.g. garlic crossing into next year) are visible at a glance.
+
+The card is served and auto-registered by the integration, so **no separate HACS
+plugin install is needed**. Add it to any dashboard:
+
+```yaml
+type: custom:garden-planner-card
+title: My Garden      # optional
+year: 2026            # optional; otherwise the range is derived from your plantings
+```
+
+If the card doesn't appear right after install, hard-refresh your browser (it's
+loaded as a versioned frontend module).
 
 ## Example dashboard
 
