@@ -23,6 +23,12 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
+          # `brands` requires listing the domain in the home-assistant/brands
+          # repo, which only applies to integrations published to the default
+          # HACS store; not relevant for a private/custom-repository install.
+          ignore: brands
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   tests:
     name: Pytest

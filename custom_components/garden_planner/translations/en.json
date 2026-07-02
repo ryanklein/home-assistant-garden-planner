@@ -179,6 +179,10 @@
       "name": "Log action",
       "description": "Record that you performed an action on a planting.",
       "fields": {
+        "device_id": {
+          "name": "Planting",
+          "description": "The planting(s) to log the action against."
+        },
         "kind": {
           "name": "Action",
           "description": "What you did."
@@ -209,11 +213,23 @@
     },
     "archive_planting": {
       "name": "Archive planting",
-      "description": "Save a finished planting's season summary and history to the archive, then remove it."
+      "description": "Save a finished planting's season summary and history to the archive, then remove it.",
+      "fields": {
+        "device_id": {
+          "name": "Planting",
+          "description": "The planting(s) to archive."
+        }
+      }
     },
     "clone_to_next_season": {
       "name": "Clone to next season",
-      "description": "Duplicate a planting into the following year with a fresh, empty history."
+      "description": "Duplicate a planting into the following year with a fresh, empty history.",
+      "fields": {
+        "device_id": {
+          "name": "Planting",
+          "description": "The planting(s) to clone."
+        }
+      }
     }
   }
 }

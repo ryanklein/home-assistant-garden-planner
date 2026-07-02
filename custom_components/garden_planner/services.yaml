@@ -1,10 +1,15 @@
 log_action:
   name: Log action
   description: Record that you performed an action on a planting (sets today's date unless one is given).
-  target:
-    device:
-      integration: garden_planner
   fields:
+    device_id:
+      name: Planting
+      description: The planting(s) to log the action against.
+      required: true
+      selector:
+        device:
+          integration: garden_planner
+          multiple: true
     kind:
       name: Action
       description: What you did.
@@ -49,13 +54,25 @@ refresh_plant_data:
 archive_planting:
   name: Archive planting
   description: Save a finished planting's season summary and history to the archive, then remove it.
-  target:
-    device:
-      integration: garden_planner
+  fields:
+    device_id:
+      name: Planting
+      description: The planting(s) to archive.
+      required: true
+      selector:
+        device:
+          integration: garden_planner
+          multiple: true
 
 clone_to_next_season:
   name: Clone to next season
   description: Duplicate a planting into the following year with a fresh, empty history.
-  target:
-    device:
-      integration: garden_planner
+  fields:
+    device_id:
+      name: Planting
+      description: The planting(s) to clone.
+      required: true
+      selector:
+        device:
+          integration: garden_planner
+          multiple: true
