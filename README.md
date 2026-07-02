@@ -1,5 +1,9 @@
 # 🌱 Garden Planner for Home Assistant
 
+<p align="center">
+  <img src="custom_components/garden_planner/brand/logo.png" alt="Garden Planner" width="320">
+</p>
+
 A native [HACS](https://hacs.xyz/) custom integration that turns Home Assistant
 into a garden planner. Model your **garden beds** and **plantings**, and let the
 integration tell you *when to sow, when to transplant, when to water, and when to

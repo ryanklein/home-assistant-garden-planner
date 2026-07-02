@@ -1,5 +1,9 @@
 # Garden Planner
 
+<p align="center">
+  <img src="custom_components/garden_planner/brand/logo.png" alt="Garden Planner" width="320">
+</p>
+
 Turn Home Assistant into a garden planner. Add garden beds and plantings, and get
 automatically computed sow / transplant / water / harvest timing based on your
 local frost dates — surfaced as sensors, a calendar, and a to-do list.
