@@ -30,9 +30,10 @@ SUBENTRY_TYPE_PLANTING = "planting"
 
 # Subentry / flow field keys -- beds
 CONF_NAME = "name"
+CONF_BED_TYPE = "bed_type"
 CONF_SUN_EXPOSURE = "sun_exposure"
-CONF_SIZE = "size"
-CONF_ORIENTATION = "orientation"
+CONF_LENGTH_FT = "length_ft"
+CONF_WIDTH_FT = "width_ft"
 CONF_SOIL = "soil"
 CONF_NOTES = "notes"
 
@@ -68,6 +69,34 @@ SUN_FULL = "full"
 SUN_PARTIAL = "partial"
 SUN_SHADE = "shade"
 SUN_VALUES = [SUN_FULL, SUN_PARTIAL, SUN_SHADE]
+
+# Bed types (kind of garden bed)
+BED_TYPE_RAISED = "raised"
+BED_TYPE_IN_GROUND = "in_ground"
+BED_TYPE_CONTAINER = "container"
+BED_TYPE_GROW_BAG = "grow_bag"
+BED_TYPE_VALUES = [
+    BED_TYPE_RAISED,
+    BED_TYPE_IN_GROUND,
+    BED_TYPE_CONTAINER,
+    BED_TYPE_GROW_BAG,
+]
+DEFAULT_BED_TYPE = BED_TYPE_RAISED
+
+# Soil types (pre-selected list)
+SOIL_VALUES = [
+    "loam",
+    "sandy",
+    "silt",
+    "clay",
+    "sandy_loam",
+    "silty_loam",
+    "clay_loam",
+    "peaty",
+    "chalky",
+    "potting_mix",
+    "compost",
+]
 
 # Water levels
 WATER_LOW = "low"

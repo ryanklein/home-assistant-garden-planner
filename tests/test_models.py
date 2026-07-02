@@ -35,5 +35,29 @@ def test_planting_roundtrip_preserves_actions_and_overrides():
 
 
 def test_bed_roundtrip():
-    bed = Bed(id="b1", name="Raised Bed 1", sun_exposure="full")
-    assert Bed.from_dict(bed.to_dict()) == bed
+    bed = Bed(
+        id="b1",
+        name="Raised Bed 1",
+        bed_type="raised",
+        sun_exposure="full",
+        length_ft=8.0,
+        width_ft=4.0,
+        soil="loam",
+    )
+    restored = Bed.from_dict(bed.to_dict())
+    assert restored == bed
+    assert restored.length_ft == 8.0
+    assert restored.width_ft == 4.0
+    assert restored.bed_type == "raised"
+    assert restored.soil == "loam"
+
+
+def test_bed_defaults_and_legacy_keys_ignored():
+    # Missing new fields default sensibly; removed keys (size/orientation) are
+    # ignored rather than raising.
+    bed = Bed.from_dict(
+        {"id": "b2", "name": "Old Bed", "size": "8x4", "orientation": "S"}
+    )
+    assert bed.bed_type == "raised"
+    assert bed.length_ft is None
+    assert not hasattr(bed, "size")

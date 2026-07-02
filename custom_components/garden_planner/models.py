@@ -16,6 +16,7 @@ from typing import Any
 
 from .const import (
     ANCHOR_SPRING,
+    DEFAULT_BED_TYPE,
     METHOD_DIRECT,
     SUN_FULL,
     WATER_MEDIUM,
@@ -111,9 +112,10 @@ class Bed:
 
     id: str
     name: str
+    bed_type: str = DEFAULT_BED_TYPE
     sun_exposure: str = SUN_FULL
-    size: str | None = None
-    orientation: str | None = None
+    length_ft: float | None = None
+    width_ft: float | None = None
     soil: str | None = None
     notes: str | None = None
 

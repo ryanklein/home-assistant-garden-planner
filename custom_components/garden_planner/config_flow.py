@@ -20,25 +20,28 @@ from homeassistant.core import callback
 from homeassistant.helpers import selector
 
 from .const import (
+    BED_TYPE_VALUES,
     CONF_API_KEY,
     CONF_BED_ID,
+    CONF_BED_TYPE,
     CONF_FIRST_FROST,
     CONF_LAST_FROST,
+    CONF_LENGTH_FT,
     CONF_METHOD,
     CONF_NAME,
     CONF_NOTES,
-    CONF_ORIENTATION,
     CONF_PLANT_QUERY,
     CONF_PLANT_SOURCE_ID,
     CONF_PROVIDER,
     CONF_QUANTITY,
     CONF_SEASON_YEAR,
-    CONF_SIZE,
     CONF_SOIL,
     CONF_SUCCESSION_INTERVAL,
     CONF_SUCCESSIONS,
     CONF_SUN_EXPOSURE,
     CONF_UNITS,
+    CONF_WIDTH_FT,
+    DEFAULT_BED_TYPE,
     DEFAULT_PROVIDER,
     DEFAULT_SUCCESSION_INTERVAL_DAYS,
     DEFAULT_UNITS,
@@ -46,6 +49,7 @@ from .const import (
     METHOD_VALUES,
     PROVIDER_PERENUAL,
     PROVIDERS,
+    SOIL_VALUES,
     SUBENTRY_TYPE_BED,
     SUBENTRY_TYPE_PLANTING,
     SUN_VALUES,
@@ -69,6 +73,29 @@ def _select(options: list[str], key: str) -> selector.SelectSelector:
             options=options,
             mode=selector.SelectSelectorMode.DROPDOWN,
             translation_key=key,
+        )
+    )
+
+
+def _radio(options: list[str], key: str) -> selector.SelectSelector:
+    """A translated radio-button selector for a fixed option list."""
+    return selector.SelectSelector(
+        selector.SelectSelectorConfig(
+            options=options,
+            mode=selector.SelectSelectorMode.LIST,
+            translation_key=key,
+        )
+    )
+
+
+def _feet() -> selector.NumberSelector:
+    """A number input measured in feet."""
+    return selector.NumberSelector(
+        selector.NumberSelectorConfig(
+            min=0,
+            step=0.5,
+            unit_of_measurement="ft",
+            mode=selector.NumberSelectorMode.BOX,
         )
     )
 
@@ -190,21 +217,25 @@ class BedSubentryFlow(ConfigSubentryFlow):
                     CONF_NAME, default=defaults.get(CONF_NAME, "")
                 ): str,
                 vol.Required(
+                    CONF_BED_TYPE,
+                    default=defaults.get(CONF_BED_TYPE, DEFAULT_BED_TYPE),
+                ): _radio(BED_TYPE_VALUES, "bed_type"),
+                vol.Required(
                     CONF_SUN_EXPOSURE,
                     default=defaults.get(CONF_SUN_EXPOSURE, SUN_VALUES[0]),
                 ): _select(SUN_VALUES, "sun_exposure"),
                 vol.Optional(
-                    CONF_SIZE,
-                    description={"suggested_value": defaults.get(CONF_SIZE)},
-                ): str,
+                    CONF_LENGTH_FT,
+                    description={"suggested_value": defaults.get(CONF_LENGTH_FT)},
+                ): _feet(),
                 vol.Optional(
-                    CONF_ORIENTATION,
-                    description={"suggested_value": defaults.get(CONF_ORIENTATION)},
-                ): str,
+                    CONF_WIDTH_FT,
+                    description={"suggested_value": defaults.get(CONF_WIDTH_FT)},
+                ): _feet(),
                 vol.Optional(
                     CONF_SOIL,
                     description={"suggested_value": defaults.get(CONF_SOIL)},
-                ): str,
+                ): _select(SOIL_VALUES, "soil"),
                 vol.Optional(
                     CONF_NOTES,
                     description={"suggested_value": defaults.get(CONF_NOTES)},

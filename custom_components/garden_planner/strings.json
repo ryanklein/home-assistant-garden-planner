@@ -37,10 +37,11 @@
           "title": "Add garden bed",
           "data": {
             "name": "Name",
+            "bed_type": "Type of bed",
             "sun_exposure": "Sun exposure",
-            "size": "Size",
-            "orientation": "Orientation",
-            "soil": "Soil",
+            "length_ft": "Length (ft)",
+            "width_ft": "Width (ft)",
+            "soil": "Soil type",
             "notes": "Notes"
           }
         },
@@ -48,10 +49,11 @@
           "title": "Reconfigure garden bed",
           "data": {
             "name": "Name",
+            "bed_type": "Type of bed",
             "sun_exposure": "Sun exposure",
-            "size": "Size",
-            "orientation": "Orientation",
-            "soil": "Soil",
+            "length_ft": "Length (ft)",
+            "width_ft": "Width (ft)",
+            "soil": "Soil type",
             "notes": "Notes"
           }
         }
@@ -155,6 +157,29 @@
         "full": "Full sun",
         "partial": "Partial sun",
         "shade": "Shade"
+      }
+    },
+    "bed_type": {
+      "options": {
+        "raised": "Raised bed",
+        "in_ground": "In-ground",
+        "container": "Container / pot",
+        "grow_bag": "Grow bag"
+      }
+    },
+    "soil": {
+      "options": {
+        "loam": "Loam",
+        "sandy": "Sandy",
+        "silt": "Silt",
+        "clay": "Clay",
+        "sandy_loam": "Sandy loam",
+        "silty_loam": "Silty loam",
+        "clay_loam": "Clay loam",
+        "peaty": "Peaty",
+        "chalky": "Chalky",
+        "potting_mix": "Potting mix",
+        "compost": "Compost"
       }
     },
     "method": {

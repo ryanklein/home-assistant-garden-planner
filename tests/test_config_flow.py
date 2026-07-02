@@ -53,6 +53,40 @@ async def test_setup_entry_loads(hass: HomeAssistant) -> None:
     assert entry.runtime_data.coordinator.data is not None
 
 
+async def test_bed_subentry_flow_new_fields(hass: HomeAssistant) -> None:
+    """Adding a bed accepts ft dimensions, soil dropdown and bed type."""
+    entry = MockConfigEntry(
+        domain=DOMAIN, unique_id=DOMAIN, options={CONF_PROVIDER: DEFAULT_PROVIDER}
+    )
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+
+    result = await hass.config_entries.subentries.async_init(
+        (entry.entry_id, "bed"), context={"source": SOURCE_USER}
+    )
+    assert result["type"] is FlowResultType.FORM
+
+    result = await hass.config_entries.subentries.async_configure(
+        result["flow_id"],
+        {
+            "name": "Raised Bed 1",
+            "bed_type": "raised",
+            "sun_exposure": "full",
+            "length_ft": 8,
+            "width_ft": 4,
+            "soil": "loam",
+        },
+    )
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    data = next(iter(entry.subentries.values())).data
+    assert data["bed_type"] == "raised"
+    assert data["length_ft"] == 8
+    assert data["width_ft"] == 4
+    assert data["soil"] == "loam"
+    assert "orientation" not in data
+    assert "size" not in data
+
+
 async def test_bundled_provider_search_and_get(hass: HomeAssistant) -> None:
     """The offline provider loads the packaged dataset."""
     provider = await BundledProvider.async_create(hass)
