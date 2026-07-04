@@ -11,7 +11,6 @@ from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.garden_planner.const import (
-    ADD_NEW,
     CONF_PROVIDER,
     DEFAULT_PROVIDER,
     DOMAIN,

@@ -116,9 +116,7 @@ def compute_harvest_dates(
     if (override := planting.override_date(ACTION_HARVEST)) is not None:
         first = override
     else:
-        anchor = (
-            transplant_date if profile.method == METHOD_TRANSPLANT else sow_date
-        )
+        anchor = transplant_date if profile.method == METHOD_TRANSPLANT else sow_date
         if anchor is None:
             return None, None
         dtm = profile.days_to_maturity or DEFAULT_DAYS_TO_MATURITY
@@ -155,7 +153,11 @@ def compute_stage(
         # Seedlings destined for transplant stay "seedling" until moved.
         if transplant_date is not None and today < transplant_date:
             return Stage.SEEDLING
-        return Stage.GERMINATING if days_since_sow < GERMINATION_DAYS + 4 else Stage.SEEDLING
+        return (
+            Stage.GERMINATING
+            if days_since_sow < GERMINATION_DAYS + 4
+            else Stage.SEEDLING
+        )
 
     if transplant_date is not None:
         if today < transplant_date:
@@ -205,16 +207,14 @@ def compute_schedule(
 
     tasks: list[GardenTask] = []
     if sow_date is not None and planting.last_action(ACTION_SOW) is None:
-        tasks.append(
-            GardenTask(planting.id, ACTION_SOW, sow_date, label="Sow seeds")
-        )
-    if (
-        transplant_date is not None
-        and planting.last_action(ACTION_TRANSPLANT) is None
-    ):
+        tasks.append(GardenTask(planting.id, ACTION_SOW, sow_date, label="Sow seeds"))
+    if transplant_date is not None and planting.last_action(ACTION_TRANSPLANT) is None:
         tasks.append(
             GardenTask(
-                planting.id, ACTION_TRANSPLANT, transplant_date, label="Transplant seedlings"
+                planting.id,
+                ACTION_TRANSPLANT,
+                transplant_date,
+                label="Transplant seedlings",
             )
         )
     if (
@@ -222,9 +222,7 @@ def compute_schedule(
             profile, planting, sow_date, harvest_end, today
         )
     ) is not None:
-        tasks.append(
-            GardenTask(planting.id, ACTION_WATER, water_date, label="Water")
-        )
+        tasks.append(GardenTask(planting.id, ACTION_WATER, water_date, label="Water"))
     if first_harvest is not None and stage != Stage.DONE:
         tasks.append(
             GardenTask(
@@ -232,9 +230,7 @@ def compute_schedule(
             )
         )
 
-    upcoming = sorted(
-        (t for t in tasks if not t.done), key=lambda t: t.due_date
-    )
+    upcoming = sorted((t for t in tasks if not t.done), key=lambda t: t.due_date)
     # The next task is the soonest one that is due today or in the future,
     # falling back to the most overdue task if everything is in the past.
     future = [t for t in upcoming if t.due_date >= today]

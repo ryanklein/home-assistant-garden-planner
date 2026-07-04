@@ -41,9 +41,7 @@ class BundledProvider(PlantDataProvider):
             return json.load(file)
 
     def _to_profile(self, key: str, raw: dict[str, Any]) -> PlantProfile:
-        return PlantProfile.from_dict(
-            {**raw, "source": self.name, "source_id": key}
-        )
+        return PlantProfile.from_dict({**raw, "source": self.name, "source_id": key})
 
     async def async_search(self, query: str) -> list[PlantProfile]:
         query = (query or "").strip().lower()

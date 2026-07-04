@@ -66,6 +66,4 @@ class OverrideDateEntity(GardenPlantingEntity, DateEntity):
         else:
             overrides[self._kind] = iso_value
         new_data = {**subentry.data, "manual_overrides": overrides}
-        self.hass.config_entries.async_update_subentry(
-            entry, subentry, data=new_data
-        )
+        self.hass.config_entries.async_update_subentry(entry, subentry, data=new_data)

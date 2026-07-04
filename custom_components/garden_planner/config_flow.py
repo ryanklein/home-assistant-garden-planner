@@ -208,7 +208,9 @@ def _make_seed_data(
     }
 
 
-def _add_vendor(hass, entry: ConfigEntry, name: str, url: str | None) -> tuple[str, str]:
+def _add_vendor(
+    hass, entry: ConfigEntry, name: str, url: str | None
+) -> tuple[str, str]:
     """Create a vendor subentry inline; return its (id, name)."""
     sub = ConfigSubentry(
         data={CONF_NAME: name, CONF_URL: url or None},
@@ -305,19 +307,13 @@ class GardenOptionsFlow(OptionsFlow):
                     CONF_API_KEY,
                     description={"suggested_value": current.get(CONF_API_KEY)},
                 ): selector.TextSelector(
-                    selector.TextSelectorConfig(
-                        type=selector.TextSelectorType.PASSWORD
-                    )
+                    selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                 ),
                 vol.Optional(
                     CONF_API_KEY_SECRET,
-                    description={
-                        "suggested_value": current.get(CONF_API_KEY_SECRET)
-                    },
+                    description={"suggested_value": current.get(CONF_API_KEY_SECRET)},
                 ): selector.TextSelector(
-                    selector.TextSelectorConfig(
-                        type=selector.TextSelectorType.PASSWORD
-                    )
+                    selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
                 ),
                 vol.Required(
                     CONF_UNITS, default=current.get(CONF_UNITS, DEFAULT_UNITS)
@@ -342,12 +338,8 @@ class BedSubentryFlow(ConfigSubentryFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> SubentryFlowResult:
         if user_input is not None:
-            return self.async_create_entry(
-                title=user_input[CONF_NAME], data=user_input
-            )
-        return self.async_show_form(
-            step_id="user", data_schema=self._schema()
-        )
+            return self.async_create_entry(title=user_input[CONF_NAME], data=user_input)
+        return self.async_show_form(step_id="user", data_schema=self._schema())
 
     async def async_step_reconfigure(
         self, user_input: dict[str, Any] | None = None
@@ -368,9 +360,7 @@ class BedSubentryFlow(ConfigSubentryFlow):
         defaults = defaults or {}
         return vol.Schema(
             {
-                vol.Required(
-                    CONF_NAME, default=defaults.get(CONF_NAME, "")
-                ): str,
+                vol.Required(CONF_NAME, default=defaults.get(CONF_NAME, "")): str,
                 vol.Required(
                     CONF_BED_TYPE,
                     default=defaults.get(CONF_BED_TYPE, DEFAULT_BED_TYPE),
@@ -406,9 +396,7 @@ class VendorSubentryFlow(ConfigSubentryFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> SubentryFlowResult:
         if user_input is not None:
-            return self.async_create_entry(
-                title=user_input[CONF_NAME], data=user_input
-            )
+            return self.async_create_entry(title=user_input[CONF_NAME], data=user_input)
         return self.async_show_form(step_id="user", data_schema=self._schema())
 
     async def async_step_reconfigure(
@@ -466,9 +454,9 @@ class SeedSubentryFlow(ConfigSubentryFlow):
 
         schema = vol.Schema(
             {
-                vol.Required(
-                    CONF_VENDOR_ID, default=VENDOR_UNKNOWN_ID
-                ): _vendor_select(self._get_entry()),
+                vol.Required(CONF_VENDOR_ID, default=VENDOR_UNKNOWN_ID): _vendor_select(
+                    self._get_entry()
+                ),
                 vol.Required(CONF_PLANT_QUERY): str,
                 vol.Required(CONF_VARIETY): str,
                 vol.Optional(CONF_SKU): str,
@@ -482,7 +470,9 @@ class SeedSubentryFlow(ConfigSubentryFlow):
     ) -> SubentryFlowResult:
         if user_input is not None:
             self._vendor_id, self._vendor_name = _add_vendor(
-                self.hass, self._get_entry(), user_input[CONF_NAME],
+                self.hass,
+                self._get_entry(),
+                user_input[CONF_NAME],
                 user_input.get(CONF_URL),
             )
             return await self.async_step_pick()
@@ -515,7 +505,9 @@ class SeedSubentryFlow(ConfigSubentryFlow):
             return self.async_create_entry(title=title, data=data)
 
         schema, note = await _plant_pick_schema(
-            self.hass, self._get_entry(), self._pending[CONF_PLANT_QUERY],
+            self.hass,
+            self._get_entry(),
+            self._pending[CONF_PLANT_QUERY],
             self._matches,
         )
         if schema is None:
@@ -604,9 +596,9 @@ class PlantingSubentryFlow(ConfigSubentryFlow):
             return await self.async_step_seed()
         schema = vol.Schema(
             {
-                vol.Required(
-                    CONF_VENDOR_ID, default=VENDOR_UNKNOWN_ID
-                ): _vendor_select(self._get_entry())
+                vol.Required(CONF_VENDOR_ID, default=VENDOR_UNKNOWN_ID): _vendor_select(
+                    self._get_entry()
+                )
             }
         )
         return self.async_show_form(step_id="vendor", data_schema=schema)
@@ -616,7 +608,9 @@ class PlantingSubentryFlow(ConfigSubentryFlow):
     ) -> SubentryFlowResult:
         if user_input is not None:
             self._vendor_id, self._vendor_name = _add_vendor(
-                self.hass, self._get_entry(), user_input[CONF_NAME],
+                self.hass,
+                self._get_entry(),
+                user_input[CONF_NAME],
                 user_input.get(CONF_URL),
             )
             return await self.async_step_seed()
@@ -688,7 +682,9 @@ class PlantingSubentryFlow(ConfigSubentryFlow):
             return await self.async_step_details()
 
         schema, note = await _plant_pick_schema(
-            self.hass, self._get_entry(), self._seed_pending[CONF_PLANT_QUERY],
+            self.hass,
+            self._get_entry(),
+            self._seed_pending[CONF_PLANT_QUERY],
             self._matches,
         )
         if schema is None:
@@ -736,9 +732,7 @@ class PlantingSubentryFlow(ConfigSubentryFlow):
                         mode=selector.NumberSelectorMode.BOX,
                     )
                 ),
-                vol.Required(
-                    CONF_SUCCESSIONS, default=1
-                ): selector.NumberSelector(
+                vol.Required(CONF_SUCCESSIONS, default=1): selector.NumberSelector(
                     selector.NumberSelectorConfig(
                         min=1, max=12, mode=selector.NumberSelectorMode.BOX
                     )
@@ -797,8 +791,7 @@ class PlantingSubentryFlow(ConfigSubentryFlow):
             data = sub.data
             if (
                 data.get(CONF_BED_ID) == bed_id
-                and data.get("profile", {}).get("source_id")
-                == self._profile.source_id
+                and data.get("profile", {}).get("source_id") == self._profile.source_id
             ):
                 count += 1
         return count

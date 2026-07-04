@@ -52,13 +52,9 @@ class GardenStore:
         raw = self._data["action_logs"].get(planting_id, [])
         return [ActionLogEntry.from_dict(item) for item in raw]
 
-    async def async_add_action(
-        self, planting_id: str, kind: str, on: date
-    ) -> None:
+    async def async_add_action(self, planting_id: str, kind: str, on: date) -> None:
         entry = ActionLogEntry(kind=kind, on=on)
-        self._data["action_logs"].setdefault(planting_id, []).append(
-            entry.to_dict()
-        )
+        self._data["action_logs"].setdefault(planting_id, []).append(entry.to_dict())
         await self._async_save()
 
     async def async_clear_planting(self, planting_id: str) -> None:
@@ -98,14 +94,12 @@ class GardenStore:
 
     # --- Profile cache ------------------------------------------------------
 
-    def get_cached_profile(
-        self, source: str, source_id: str
-    ) -> PlantProfile | None:
+    def get_cached_profile(self, source: str, source_id: str) -> PlantProfile | None:
         raw = self._data["profile_cache"].get(_cache_key(source, source_id))
         return PlantProfile.from_dict(raw) if raw else None
 
     async def async_cache_profile(self, profile: PlantProfile) -> None:
-        self._data["profile_cache"][
-            _cache_key(profile.source, profile.source_id)
-        ] = profile.to_dict()
+        self._data["profile_cache"][_cache_key(profile.source, profile.source_id)] = (
+            profile.to_dict()
+        )
         await self._async_save()

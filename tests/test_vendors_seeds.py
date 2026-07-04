@@ -84,7 +84,9 @@ def test_seed_roundtrip():
         vendor_id="v1",
         vendor_name="Baker Creek",
         variety="Cherokee Purple",
-        profile=PlantProfile(common_name="Tomato", source="bundled", source_id="tomato"),
+        profile=PlantProfile(
+            common_name="Tomato", source="bundled", source_id="tomato"
+        ),
         sku="TOM-123",
     )
     restored = Seed.from_dict(seed.to_dict())
@@ -186,8 +188,13 @@ async def test_planting_wizard_inline_add_seed(hass: HomeAssistant) -> None:
     assert result["step_id"] == "details"
     result = await hass.config_entries.subentries.async_configure(
         result["flow_id"],
-        {"bed_id": bed_id, "quantity": 2, "season_year": 2026, "successions": 1,
-         "succession_interval_days": 14},
+        {
+            "bed_id": bed_id,
+            "quantity": 2,
+            "season_year": 2026,
+            "successions": 1,
+            "succession_interval_days": 14,
+        },
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
     await hass.async_block_till_done()

@@ -45,7 +45,9 @@ def _direct_radish() -> PlantProfile:
 
 
 def test_transplant_dates_are_frost_relative():
-    planting = Planting(id="p1", bed_id="b1", profile=_transplant_tomato(), method="transplant")
+    planting = Planting(
+        id="p1", bed_id="b1", profile=_transplant_tomato(), method="transplant"
+    )
     result = compute_schedule(planting, FROST, today=date(2026, 1, 1))
 
     assert result.sow_date == FROST.last_frost - timedelta(weeks=6)
@@ -113,7 +115,9 @@ def _overwinter_garlic() -> PlantProfile:
 
 
 def test_overwinter_crop_sows_in_fall_and_harvests_next_year():
-    planting = Planting(id="g1", bed_id="b1", profile=_overwinter_garlic(), method="direct")
+    planting = Planting(
+        id="g1", bed_id="b1", profile=_overwinter_garlic(), method="direct"
+    )
     result = compute_schedule(planting, FROST, today=date(2026, 6, 1))
 
     # Sown relative to the first FALL frost, not the spring frost.
@@ -124,7 +128,9 @@ def test_overwinter_crop_sows_in_fall_and_harvests_next_year():
 
 
 def test_overwinter_crop_has_no_water_tasks():
-    planting = Planting(id="g2", bed_id="b1", profile=_overwinter_garlic(), method="direct")
+    planting = Planting(
+        id="g2", bed_id="b1", profile=_overwinter_garlic(), method="direct"
+    )
     # A date after sowing when a normal crop would have watering due.
     result = compute_schedule(planting, FROST, today=date(2026, 10, 1))
     assert all(t.kind != "water" for t in result.tasks)

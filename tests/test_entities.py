@@ -89,9 +89,7 @@ async def test_calendar_and_todo_have_tasks(hass: HomeAssistant) -> None:
 async def test_stage_sensor_has_value(hass: HomeAssistant) -> None:
     await _setup_with_planting(hass)
     stage_ids = [
-        eid
-        for eid in hass.states.async_entity_ids("sensor")
-        if "stage" in eid
+        eid for eid in hass.states.async_entity_ids("sensor") if "stage" in eid
     ]
     assert stage_ids
     assert hass.states.get(stage_ids[0]).state != "unknown"

@@ -30,6 +30,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  lint:
+    name: Ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+      - run: ruff check custom_components tests
+      - run: ruff format --check custom_components tests
+
   tests:
     name: Pytest
     runs-on: ubuntu-latest

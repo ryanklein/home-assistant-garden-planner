@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 import homeassistant.util.dt as dt_util
 from homeassistant.components.calendar import CalendarEntity, CalendarEvent
@@ -23,9 +23,7 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the single garden calendar."""
-    async_add_entities(
-        [GardenCalendar(entry.runtime_data.coordinator, entry.entry_id)]
-    )
+    async_add_entities([GardenCalendar(entry.runtime_data.coordinator, entry.entry_id)])
 
 
 class GardenCalendar(CoordinatorEntity[GardenCoordinator], CalendarEntity):

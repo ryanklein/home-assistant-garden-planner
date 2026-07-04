@@ -32,9 +32,7 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the single garden to-do list."""
-    async_add_entities(
-        [GardenTodoList(entry.runtime_data.coordinator, entry.entry_id)]
-    )
+    async_add_entities([GardenTodoList(entry.runtime_data.coordinator, entry.entry_id)])
 
 
 class GardenTodoList(CoordinatorEntity[GardenCoordinator], TodoListEntity):
@@ -55,9 +53,7 @@ class GardenTodoList(CoordinatorEntity[GardenCoordinator], TodoListEntity):
         }
 
     def _uid(self, task: GardenTask) -> str:
-        return _UID_SEP.join(
-            [task.planting_id, task.kind, task.due_date.isoformat()]
-        )
+        return _UID_SEP.join([task.planting_id, task.kind, task.due_date.isoformat()])
 
     def _item_from_task(self, task: GardenTask) -> TodoItem:
         planting = self.coordinator.data.plantings.get(task.planting_id)

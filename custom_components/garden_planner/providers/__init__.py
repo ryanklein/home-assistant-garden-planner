@@ -14,7 +14,6 @@ from abc import ABC, abstractmethod
 from homeassistant.core import HomeAssistant
 
 from ..const import (
-    PROVIDER_BUNDLED,
     PROVIDER_OPENFARM,
     PROVIDER_PERMAPEOPLE,
     SUN_FULL,
