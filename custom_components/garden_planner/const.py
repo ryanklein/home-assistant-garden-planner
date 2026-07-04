@@ -18,7 +18,8 @@ PLATFORMS: list[Platform] = [
 
 # Config entry option keys (global garden settings)
 CONF_PROVIDER = "provider"
-CONF_API_KEY = "api_key"
+CONF_API_KEY = "api_key"  # PermaPeople key id
+CONF_API_KEY_SECRET = "api_key_secret"  # PermaPeople key secret
 CONF_UNITS = "units"
 CONF_LAST_FROST = "last_frost"  # ISO date string, manual override
 CONF_FIRST_FROST = "first_frost"  # ISO date string, manual override
@@ -69,10 +70,10 @@ DEFAULT_SUCCESSION_INTERVAL_DAYS = 14
 
 # Providers
 PROVIDER_BUNDLED = "bundled"
-PROVIDER_PERENUAL = "perenual"
+PROVIDER_PERMAPEOPLE = "permapeople"
 PROVIDER_OPENFARM = "openfarm"
 DEFAULT_PROVIDER = PROVIDER_BUNDLED
-PROVIDERS = [PROVIDER_BUNDLED, PROVIDER_PERENUAL, PROVIDER_OPENFARM]
+PROVIDERS = [PROVIDER_BUNDLED, PROVIDER_PERMAPEOPLE, PROVIDER_OPENFARM]
 
 # Units
 UNITS_METRIC = "metric"

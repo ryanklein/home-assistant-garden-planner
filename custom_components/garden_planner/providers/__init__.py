@@ -16,7 +16,7 @@ from homeassistant.core import HomeAssistant
 from ..const import (
     PROVIDER_BUNDLED,
     PROVIDER_OPENFARM,
-    PROVIDER_PERENUAL,
+    PROVIDER_PERMAPEOPLE,
     SUN_FULL,
     SUN_PARTIAL,
     SUN_SHADE,
@@ -58,6 +58,7 @@ _SUN_MAP = {
     "partial": SUN_PARTIAL,
     "partial shade": SUN_PARTIAL,
     "partial sun": SUN_PARTIAL,
+    "partial sun/shade": SUN_PARTIAL,
     "filtered shade": SUN_PARTIAL,
     "shade": SUN_SHADE,
     "full_shade": SUN_SHADE,
@@ -75,6 +76,11 @@ _WATER_MAP = {
     "minimal": WATER_LOW,
     "low": WATER_LOW,
     "none": WATER_LOW,
+    # PermaPeople "Water requirement" values.
+    "dry": WATER_LOW,
+    "moist": WATER_MEDIUM,
+    "wet": WATER_HIGH,
+    "aquatic": WATER_HIGH,
 }
 
 
@@ -95,13 +101,16 @@ def normalize_water(value: str | None, default: str = WATER_MEDIUM) -> str:
 
 
 async def async_get_provider(
-    hass: HomeAssistant, provider: str, api_key: str | None = None
+    hass: HomeAssistant,
+    provider: str,
+    api_key: str | None = None,
+    api_secret: str | None = None,
 ) -> PlantDataProvider:
     """Instantiate a provider by name (imports are local to keep setup cheap)."""
-    if provider == PROVIDER_PERENUAL:
-        from .perenual import PerenualProvider
+    if provider == PROVIDER_PERMAPEOPLE:
+        from .permapeople import PermaPeopleProvider
 
-        return PerenualProvider(hass, api_key)
+        return PermaPeopleProvider(hass, api_key, api_secret)
     if provider == PROVIDER_OPENFARM:
         from .openfarm import OpenFarmProvider
 

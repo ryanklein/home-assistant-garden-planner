@@ -23,6 +23,7 @@ from .const import (
     ADD_NEW,
     BED_TYPE_VALUES,
     CONF_API_KEY,
+    CONF_API_KEY_SECRET,
     CONF_BED_ID,
     CONF_BED_TYPE,
     CONF_FIRST_FROST,
@@ -54,7 +55,7 @@ from .const import (
     DEFAULT_UNITS,
     DOMAIN,
     METHOD_VALUES,
-    PROVIDER_PERENUAL,
+    PROVIDER_PERMAPEOPLE,
     PROVIDERS,
     SOIL_VALUES,
     SUBENTRY_TYPE_BED,
@@ -119,10 +120,11 @@ async def _resolve_provider(hass, entry: ConfigEntry) -> tuple[Any, str]:
     options = entry.options
     name = options.get(CONF_PROVIDER, DEFAULT_PROVIDER)
     api_key = options.get(CONF_API_KEY)
-    if name == PROVIDER_PERENUAL and not api_key:
+    api_secret = options.get(CONF_API_KEY_SECRET)
+    if name == PROVIDER_PERMAPEOPLE and not (api_key and api_secret):
         provider = await async_get_provider(hass, DEFAULT_PROVIDER)
-        return provider, "No API key set; showing bundled plants."
-    return await async_get_provider(hass, name, api_key), ""
+        return provider, "No PermaPeople credentials set; showing bundled plants."
+    return await async_get_provider(hass, name, api_key, api_secret), ""
 
 
 def _existing_vendors(entry: ConfigEntry) -> dict[str, str]:
@@ -302,6 +304,16 @@ class GardenOptionsFlow(OptionsFlow):
                 vol.Optional(
                     CONF_API_KEY,
                     description={"suggested_value": current.get(CONF_API_KEY)},
+                ): selector.TextSelector(
+                    selector.TextSelectorConfig(
+                        type=selector.TextSelectorType.PASSWORD
+                    )
+                ),
+                vol.Optional(
+                    CONF_API_KEY_SECRET,
+                    description={
+                        "suggested_value": current.get(CONF_API_KEY_SECRET)
+                    },
                 ): selector.TextSelector(
                     selector.TextSelectorConfig(
                         type=selector.TextSelectorType.PASSWORD

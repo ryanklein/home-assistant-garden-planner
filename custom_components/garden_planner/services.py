@@ -25,6 +25,7 @@ from .const import (
     CONF_LAST_FROST,
     CONF_PROVIDER,
     CONF_API_KEY,
+    CONF_API_KEY_SECRET,
     DEFAULT_PROVIDER,
     DOMAIN,
     SERVICE_ARCHIVE_PLANTING,
@@ -129,6 +130,7 @@ async def _handle_refresh_plant_data(call: ServiceCall) -> None:
         hass,
         options.get(CONF_PROVIDER, DEFAULT_PROVIDER),
         options.get(CONF_API_KEY),
+        options.get(CONF_API_KEY_SECRET),
     )
     store = entry.runtime_data.store
     for subentry in entry.subentries.values():

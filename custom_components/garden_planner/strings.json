@@ -17,7 +17,8 @@
         "description": "Frost dates are estimated from your Home Assistant location. Leave the override fields empty to keep using the estimate.",
         "data": {
           "provider": "Plant data provider",
-          "api_key": "API key (Perenual only)",
+          "api_key": "PermaPeople key ID",
+          "api_key_secret": "PermaPeople key secret",
           "units": "Units",
           "last_frost": "Last spring frost (override)",
           "first_frost": "First fall frost (override)"
@@ -210,7 +211,7 @@
     "provider": {
       "options": {
         "bundled": "Bundled (offline)",
-        "perenual": "Perenual",
+        "permapeople": "PermaPeople",
         "openfarm": "OpenFarm"
       }
     },

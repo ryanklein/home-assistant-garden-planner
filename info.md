@@ -8,7 +8,7 @@ Turn Home Assistant into a garden planner. Add garden beds and plantings, and ge
 automatically computed sow / transplant / water / harvest timing based on your
 local frost dates — surfaced as sensors, a calendar, and a to-do list.
 
-- Bundled offline plant database (no API key required), with optional Perenual and
+- Bundled offline plant database (no API key required), with optional PermaPeople and
   OpenFarm providers.
 - Per-planting growth stage, next task, and days-to-harvest sensors.
 - Native Calendar and To-do entities for upcoming garden tasks.

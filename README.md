@@ -27,8 +27,8 @@ harvest* — with dates computed automatically from your local frost dates.
   History is never silently lost — deleting a planting from the UI archives its
   log automatically.
 - **Pluggable plant data** with a bundled offline database (works with no API key
-  or network), plus optional Perenual and OpenFarm providers. Every fetched plant
-  is cached locally so plantings keep working if a provider goes down.
+  or network), plus optional PermaPeople and OpenFarm providers. Every fetched
+  plant is cached locally so plantings keep working if a provider goes down.
 - **Per-planting entities**: growth stage, next task, days to next task, harvest
   date, days to harvest, an "action needed" binary sensor, one-tap log buttons,
   and manual date-override controls.
@@ -55,8 +55,9 @@ vendor is always available for self-saved seed or swaps.
 
 ## Configuration
 
-- **Options** (⚙️ on the integration): choose the plant-data provider, enter a
-  Perenual API key if used, pick units, and optionally override the frost dates.
+- **Options** (⚙️ on the integration): choose the plant-data provider, enter your
+  PermaPeople key ID + secret if used, pick units, and optionally override the
+  frost dates.
 - **Frost dates** default to an estimate based on your Home Assistant latitude.
   Set your known local dates for best accuracy.
 
