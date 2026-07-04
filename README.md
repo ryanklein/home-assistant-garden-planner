@@ -43,8 +43,15 @@ harvest* — with dates computed automatically from your local frost dates.
 1. In HACS → **Custom repositories**, add this repository as an **Integration**.
 2. Install **Garden Planner** and restart Home Assistant.
 3. **Settings → Devices & Services → Add Integration → Garden Planner.**
-4. Open the integration, then use **Add garden bed** and **Add planting**
-   (the "+" on the integration's subentries) to build out your garden.
+4. Open the integration and use the "+" subentry buttons to build out your
+   garden: **Add garden bed**, then **Add planting**.
+
+**Adding a planting** walks you through **vendor → seed → planting**: pick (or add)
+the **vendor** you got the seed from, pick (or add) the **seed** variety (adding a
+seed is where you search the plant database), then choose the bed, quantity, season
+and successions. Vendors and seeds can also be created on their own via **Add vendor**
+/ **Add seed**, and reused across plantings. A built-in **"Saved seed / Unknown"**
+vendor is always available for self-saved seed or swaps.
 
 ## Configuration
 

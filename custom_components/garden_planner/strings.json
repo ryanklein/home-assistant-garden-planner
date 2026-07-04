@@ -59,30 +59,98 @@
         }
       }
     },
+    "vendor": {
+      "initiate_flow": {
+        "user": "Add vendor"
+      },
+      "entry_type": "Vendor",
+      "step": {
+        "user": {
+          "title": "Add vendor",
+          "data": { "name": "Name", "url": "Website", "notes": "Notes" }
+        },
+        "reconfigure": {
+          "title": "Reconfigure vendor",
+          "data": { "name": "Name", "url": "Website", "notes": "Notes" }
+        }
+      }
+    },
+    "seed": {
+      "initiate_flow": {
+        "user": "Add seed"
+      },
+      "entry_type": "Seed",
+      "step": {
+        "user": {
+          "title": "Add seed",
+          "description": "Choose a vendor and search for the plant.",
+          "data": {
+            "vendor_id": "Vendor",
+            "plant_query": "Search for a plant",
+            "variety": "Variety",
+            "sku": "SKU / item code",
+            "url": "Product link"
+          }
+        },
+        "vendor_new": {
+          "title": "Add vendor",
+          "data": { "name": "Vendor name", "url": "Website" }
+        },
+        "pick": {
+          "title": "Choose a plant",
+          "description": "{note}",
+          "data": { "plant_source_id": "Plant" }
+        }
+      },
+      "abort": {
+        "no_matches": "No plants matched your search. Try a different term or provider."
+      }
+    },
     "planting": {
       "initiate_flow": {
         "user": "Add planting"
       },
       "entry_type": "Planting",
       "step": {
-        "user": {
-          "title": "Add planting",
-          "description": "Choose a bed and search for a plant.",
+        "vendor": {
+          "title": "Vendor",
+          "description": "Select the vendor the seed came from, or add a new one.",
+          "data": { "vendor_id": "Vendor" }
+        },
+        "vendor_new": {
+          "title": "Add vendor",
+          "data": { "name": "Vendor name", "url": "Website" }
+        },
+        "seed": {
+          "title": "Seed",
+          "description": "Select an existing seed from this vendor, or add a new one.",
+          "data": { "seed_id": "Seed" }
+        },
+        "seed_new": {
+          "title": "Add seed",
+          "description": "Search for the plant and name the variety.",
+          "data": {
+            "plant_query": "Search for a plant",
+            "variety": "Variety",
+            "sku": "SKU / item code",
+            "url": "Product link"
+          }
+        },
+        "seed_pick": {
+          "title": "Choose a plant",
+          "description": "{note}",
+          "data": { "plant_source_id": "Plant" }
+        },
+        "details": {
+          "title": "Planting details",
+          "description": "Where and when to grow it.",
           "data": {
             "bed_id": "Garden bed",
-            "plant_query": "Search for a plant",
             "method": "Sowing method (optional override)",
             "quantity": "Quantity",
             "season_year": "Season year",
             "successions": "Number of successive plantings",
             "succession_interval_days": "Days between successions"
-          }
-        },
-        "pick": {
-          "title": "Choose a plant",
-          "description": "{note}",
-          "data": {
-            "plant_source_id": "Plant"
           }
         }
       },

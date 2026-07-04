@@ -27,6 +27,21 @@ CONF_HARDINESS_ZONE = "hardiness_zone"
 # Subentry types
 SUBENTRY_TYPE_BED = "bed"
 SUBENTRY_TYPE_PLANTING = "planting"
+SUBENTRY_TYPE_VENDOR = "vendor"
+SUBENTRY_TYPE_SEED = "seed"
+
+# Subentry / flow field keys -- vendors & seeds
+CONF_VENDOR_ID = "vendor_id"
+CONF_VENDOR_NAME = "vendor_name"
+CONF_URL = "url"
+CONF_VARIETY = "variety"
+CONF_SKU = "sku"
+CONF_SEED_ID = "seed_id"
+
+# Sentinel select values used in the vendor -> seed -> planting wizard.
+ADD_NEW = "__add_new__"
+VENDOR_UNKNOWN_ID = "__unknown__"
+VENDOR_UNKNOWN_NAME = "Saved seed / Unknown"
 
 # Subentry / flow field keys -- beds
 CONF_NAME = "name"

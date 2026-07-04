@@ -129,6 +129,64 @@ class Bed:
 
 
 @dataclass(slots=True)
+class Vendor:
+    """A seed/plant vendor. Backed by a config subentry (subentry_id == id)."""
+
+    id: str
+    name: str
+    url: str | None = None
+    notes: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return dataclasses.asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Vendor:
+        known = {f.name for f in dataclasses.fields(cls)}
+        return cls(**{k: v for k, v in data.items() if k in known})
+
+
+@dataclass(slots=True)
+class Seed:
+    """A specific seed/plant variety obtained from a vendor.
+
+    ``profile`` is embedded -- the plant data chosen when the seed was created --
+    so the seed carries the plant identity used by any planting referencing it.
+    """
+
+    id: str
+    vendor_id: str
+    vendor_name: str
+    variety: str
+    profile: PlantProfile
+    sku: str | None = None
+    url: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "vendor_id": self.vendor_id,
+            "vendor_name": self.vendor_name,
+            "variety": self.variety,
+            "profile": self.profile.to_dict(),
+            "sku": self.sku,
+            "url": self.url,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Seed:
+        return cls(
+            id=data["id"],
+            vendor_id=data.get("vendor_id", ""),
+            vendor_name=data.get("vendor_name", ""),
+            variety=data.get("variety", ""),
+            profile=PlantProfile.from_dict(data["profile"]),
+            sku=data.get("sku"),
+            url=data.get("url"),
+        )
+
+
+@dataclass(slots=True)
 class ActionLogEntry:
     """A record of something the gardener did to a planting."""
 
@@ -161,6 +219,12 @@ class Planting:
     season_year: int | None = None
     manual_overrides: dict[str, str] = field(default_factory=dict)
     action_log: list[ActionLogEntry] = field(default_factory=list)
+    # Provenance (denormalized from the seed at creation; optional/absent-tolerant
+    # so plantings created before vendors/seeds existed keep working).
+    seed_id: str | None = None
+    seed_variety: str | None = None
+    vendor_id: str | None = None
+    vendor_name: str | None = None
 
     def override_date(self, kind: str) -> date | None:
         return _date_from_iso(self.manual_overrides.get(kind))
@@ -179,6 +243,10 @@ class Planting:
             "season_year": self.season_year,
             "manual_overrides": dict(self.manual_overrides),
             "action_log": [e.to_dict() for e in self.action_log],
+            "seed_id": self.seed_id,
+            "seed_variety": self.seed_variety,
+            "vendor_id": self.vendor_id,
+            "vendor_name": self.vendor_name,
         }
 
     @classmethod
@@ -194,6 +262,10 @@ class Planting:
             action_log=[
                 ActionLogEntry.from_dict(e) for e in data.get("action_log", [])
             ],
+            seed_id=data.get("seed_id"),
+            seed_variety=data.get("seed_variety"),
+            vendor_id=data.get("vendor_id"),
+            vendor_name=data.get("vendor_name"),
         )
 
 

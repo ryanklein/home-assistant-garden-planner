@@ -20,10 +20,12 @@ from .const import (
     EVENT_TASK_DUE,
     SUBENTRY_TYPE_BED,
     SUBENTRY_TYPE_PLANTING,
+    SUBENTRY_TYPE_SEED,
+    SUBENTRY_TYPE_VENDOR,
     UPDATE_INTERVAL_HOURS,
 )
 from .frost import resolve_frost_dates
-from .models import Bed, GardenTask, Planting, Stage
+from .models import Bed, GardenTask, Planting, Seed, Stage, Vendor
 from .schedule import FrostDates, ScheduleResult, compute_schedule
 from .store import GardenStore
 
@@ -39,6 +41,8 @@ class GardenData:
     def __init__(self) -> None:
         self.beds: dict[str, Bed] = {}
         self.plantings: dict[str, Planting] = {}
+        self.vendors: dict[str, Vendor] = {}
+        self.seeds: dict[str, Seed] = {}
         self.schedules: dict[str, ScheduleResult] = {}
         self.frost: dict[int, FrostDates] = {}
 
@@ -93,11 +97,16 @@ class GardenCoordinator(DataUpdateCoordinator[GardenData]):
         today = dt_util.now().date()
 
         for subentry in self.config_entry.subentries.values():
+            payload = {**subentry.data, "id": subentry.subentry_id}
             if subentry.subentry_type == SUBENTRY_TYPE_BED:
-                bed = Bed.from_dict(
-                    {**subentry.data, "id": subentry.subentry_id}
-                )
+                bed = Bed.from_dict(payload)
                 data.beds[bed.id] = bed
+            elif subentry.subentry_type == SUBENTRY_TYPE_VENDOR:
+                vendor = Vendor.from_dict(payload)
+                data.vendors[vendor.id] = vendor
+            elif subentry.subentry_type == SUBENTRY_TYPE_SEED:
+                seed = Seed.from_dict(payload)
+                data.seeds[seed.id] = seed
             elif subentry.subentry_type == SUBENTRY_TYPE_PLANTING:
                 planting = self._build_planting(subentry)
                 data.plantings[planting.id] = planting

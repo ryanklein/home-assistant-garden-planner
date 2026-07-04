@@ -145,10 +145,14 @@ class PlantingSensor(GardenPlantingEntity, SensorEntity):
         if planting is None or schedule is None:
             return None
         bed = self.coordinator.data.beds.get(planting.bed_id)
+        seed = self.coordinator.data.seeds.get(planting.seed_id)
         return {
             "gp_role": "planting",
             "planting_id": planting.id,
             "plant": planting.profile.common_name,
+            "variety": planting.seed_variety,
+            "vendor": planting.vendor_name,
+            "seed_sku": seed.sku if seed else None,
             "bed": bed.name if bed else None,
             "bed_id": planting.bed_id,
             "season": schedule.season_label,
